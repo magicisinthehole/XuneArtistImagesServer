@@ -38,6 +38,16 @@ limiter = Limiter(
     storage_uri="memory://",
 )
 
+
+@app.before_request
+def check_user_agent():
+    if request.path == '/healthz':
+        return
+    ua = request.headers.get('User-Agent', '')
+    if not ua.startswith('Xune/'):
+        return abort(403)
+
+
 # MBID validation (standard UUID format used by MusicBrainz)
 MBID_PATTERN = re.compile(
     r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
