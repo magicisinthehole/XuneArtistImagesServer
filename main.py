@@ -44,7 +44,7 @@ def check_user_agent():
     if request.path == '/healthz':
         return
     ua = request.headers.get('User-Agent', '')
-    if not ua.startswith('Xune/'):
+    if not (ua.startswith('Xune/') or 'Zune' in ua):
         return abort(403)
 
 
@@ -1179,38 +1179,50 @@ def getImg(imgID):
 
 @app.route("/v3.0/en-US/music/artist/<mbid>/albums", strict_slashes=False)
 def albums(mbid):
-    """Albums endpoint (stub)."""
+    """Albums endpoint (stub) - returns empty Atom feed."""
     if not validate_mbid(mbid):
         return abort(400)
-    try:
-        artist_info = get_artist_info(mbid)
-        return artist_info['name']
-    except Exception:
-        return abort(404)
+    xml_data = f'''<?xml version="1.0" encoding="utf-8"?><a:feed xmlns:a="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns="http://schemas.zune.net/catalog/music/2007/10"><a:link rel="self" type="application/atom+xml" href="/v3.0/en-US/music/artist/{mbid}/albums" /><a:updated>1900-01-01T00:00:00.000000Z</a:updated><a:title type="text">List Of Items</a:title><a:id>tag:catalog.zune.net,1900-01-01:/music/artist/{mbid}/albums</a:id><a:author><a:name>Microsoft Corporation</a:name></a:author></a:feed>'''
+    return Response(xml_data, mimetype='application/xml', headers={
+        'Content-Type': 'application/xml',
+        'Cache-Control': 'max-age=86400',
+        'Connection': 'keep-alive',
+        'Keep-Alive': 'timeout=150000, max=10',
+        'Expires': 'Sun, 19 Apr 2071 10:00:00 GMT',
+        'Access-Control-Allow-Origin': '*'
+    })
 
 
 @app.route("/v3.0/en-US/music/artist/<mbid>/similarArtists", strict_slashes=False)
 def similar(mbid):
-    """Similar artists endpoint (stub)."""
+    """Similar artists endpoint (stub) - returns empty Atom feed."""
     if not validate_mbid(mbid):
         return abort(400)
-    try:
-        artist_info = get_artist_info(mbid)
-        return artist_info['name']
-    except Exception:
-        return abort(404)
+    xml_data = f'''<?xml version="1.0" encoding="utf-8"?><a:feed xmlns:a="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns="http://schemas.zune.net/catalog/music/2007/10"><a:link rel="self" type="application/atom+xml" href="/v3.0/en-US/music/artist/{mbid}/similarArtists" /><a:updated>1900-01-01T00:00:00.000000Z</a:updated><a:title type="text">List Of Items</a:title><a:id>tag:catalog.zune.net,1900-01-01:/music/artist/{mbid}/similarArtists</a:id><a:author><a:name>Microsoft Corporation</a:name></a:author></a:feed>'''
+    return Response(xml_data, mimetype='application/xml', headers={
+        'Content-Type': 'application/xml',
+        'Cache-Control': 'max-age=86400',
+        'Connection': 'keep-alive',
+        'Keep-Alive': 'timeout=150000, max=10',
+        'Expires': 'Sun, 19 Apr 2071 10:00:00 GMT',
+        'Access-Control-Allow-Origin': '*'
+    })
 
 
 @app.route("/v3.0/en-US/music/artist/<mbid>/tracks", strict_slashes=False)
 def tracks(mbid):
-    """Tracks endpoint (stub)."""
+    """Tracks endpoint (stub) - returns empty Atom feed."""
     if not validate_mbid(mbid):
         return abort(400)
-    try:
-        artist_info = get_artist_info(mbid)
-        return artist_info['name']
-    except Exception:
-        return abort(404)
+    xml_data = f'''<?xml version="1.0" encoding="utf-8"?><a:feed xmlns:a="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns="http://schemas.zune.net/catalog/music/2007/10"><a:link rel="self" type="application/atom+xml" href="/v3.0/en-US/music/artist/{mbid}/tracks" /><a:updated>1900-01-01T00:00:00.000000Z</a:updated><a:title type="text">List Of Items</a:title><a:id>tag:catalog.zune.net,1900-01-01:/music/artist/{mbid}/tracks</a:id><a:author><a:name>Microsoft Corporation</a:name></a:author></a:feed>'''
+    return Response(xml_data, mimetype='application/xml', headers={
+        'Content-Type': 'application/xml',
+        'Cache-Control': 'max-age=86400',
+        'Connection': 'keep-alive',
+        'Keep-Alive': 'timeout=150000, max=10',
+        'Expires': 'Sun, 19 Apr 2071 10:00:00 GMT',
+        'Access-Control-Allow-Origin': '*'
+    })
 
 
 @app.route("/v3.0/en-US/music/artist/<mbid>/biography", strict_slashes=False)
